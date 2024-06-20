@@ -10,15 +10,11 @@ const userSchema = new mongoose.Schema({
         required:true,
         unique:true
     },
-    username:{
-        type:String,
-        required:true
-    },
     password:{
         type:String,
         required:true
     },
-    gtihub:{
+    github:{
         type:String,
     },
     linkedin:{

@@ -24,7 +24,6 @@ exports.addProjectController = async(req, res) => {
     }
 }
 
-
 // home projects
 exports.gethomeProjects = async(req,res)=>{
     console.log("inside gethome projects");
@@ -54,6 +53,36 @@ exports.getUserProjectsController = async(req,res)=>{
     try {
         const userProjects = await projects.find({userId})
         res.status(200).json(userProjects)
+    } catch (err) {
+        res.status(401).json(err)
+    }
+}
+
+//edit project
+exports.editProjectController = async (req,res) =>{
+    console.log("Inside edit project controller");
+    const {pid} = req.params         //project id as per url
+    const { title, languages, github, website, overview, projectImg } = req.body
+    const uploadImg = req.file ? req.file.filename : projectImg 
+    const userId = req.payload
+    try {
+        const updateProject = await projects.findByIdAndUpdate({_id:pid},{
+            title,languages,github,website,overview,projectImg:uploadImg,userId
+        },{new:true})                //to perform successfully updation 
+        await updateProject.save()   //to save model to mongodb
+        res.status(200).json(updateProject)
+    } catch (err) {
+        res.status(401).json(err)
+    }
+}
+
+//Delete project
+exports.removeProjectController = async (req,res) =>{
+    console.log("Inside remove project controller");
+    const {pid} = req.params
+    try {
+       const removeProject = await projects.findByIdAndDelete({_id:pid})
+        res.status(200).json(removeProject) 
     } catch (err) {
         res.status(401).json(err)
     }
